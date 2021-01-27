@@ -1,24 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useEffect, useState} from 'react';
 import './App.css';
+import TableComponent from './components/TableComponent/TableComponent';
+import axios from 'axios'
+import {Spinner} from 'reactstrap';
+import LoaderComponent from './components/LoaderComponent/LoaderComponent';
+import Particles from 'react-particles-js';
 
 function App() {
+	const [data, setData] = useState(null)
+
+	useEffect(()=>{
+		axios.get("https://jsonplaceholder.typicode.com/comments")
+	  .then(res=>{
+	    setData(res.data)
+		}).catch(err=>{
+		console.log(err)
+	})
+	}, [])
+
+	if(!data) {
+		return (
+		   <LoaderComponent/>
+		)
+	}
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+		<TableComponent data={data}/>
     </div>
   );
 }
